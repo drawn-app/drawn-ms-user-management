@@ -2,17 +2,7 @@ import { User } from '@prisma/client';
 import { db } from '../utils/db';
 import bcrypt from 'bcrypt';
 import { uploadImage } from '../utils/firebase';
-
-type UserUpdate = {
-    displayName?: string;
-    avatar?: File;
-}
-
-type UserUpdateURL = {
-    displayName?: string;
-    avatar?: string;
-} ;
-
+import { UserUpdateInput } from '../dto/user.dto';
 
 export default class UserService{
 
@@ -63,7 +53,7 @@ export default class UserService{
         return user ? true : false;
     }
 
-    async updateUser(id: string, dataUpdate: UserUpdate) {
+    async updateUser(id: string, dataUpdate: UserUpdateInput) {
         // convert dataUpdate to UserUpdateURL by uploading image to firebase if avatar is provided
         const isUserExist = await this.isUserExist(id);
         if (!isUserExist) {

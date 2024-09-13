@@ -1,5 +1,6 @@
 import {t, Elysia} from "elysia";
 import UserService from "../services/user.service";
+import { UserPasswordUpdateBody, UserUpdateBody } from "../dto/user.dto";
 
 const userService = new UserService();
 
@@ -19,11 +20,7 @@ export const userController = new Elysia({ prefix: '/users' })
                                                 return error("Not Found", err);
                                             }
                                         },{
-                                            body : t.Object({
-                                                displayName: t.Optional(t.String()),
-                                                avatar: t.Optional(t.File()),
-                                                
-                                            })
+                                            body : UserUpdateBody
                                         })
                                         .put("/:id/password", async ({ params: { id }, body, error }) => {
                                             try {
@@ -33,13 +30,7 @@ export const userController = new Elysia({ prefix: '/users' })
                                                return error("Unauthorized", err);
                                             } 
                                         },{
-                                            body : t.Object({
-                                                oldPassword: t.String(),
-                                                newPassword: t.String({
-                                                    minLength: 8,
-                                                    error: "New Password must be at least 8 characters",
-                                                }),
-                                            })
+                                            body : UserPasswordUpdateBody
                                         })
                                         .delete("/:id", async ({ params: { id }, body ,error}) => {
                                             try {
