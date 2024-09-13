@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { db } from "../utils/db";
 import { ValidationError } from "elysia";
 import { BadRequestError } from "../utils/error";
+import { uploadImage } from "../utils/firebase";
 
 export default class AuthService {
 
@@ -21,11 +22,14 @@ export default class AuthService {
         // Hash password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(data.password, salt);
-
+        const {avatar ,...user_data} = data;
+        // uploade file avatar
+        const avatarURL = (avatar) ? await uploadImage(avatar, "avatars") : undefined;
         // Create user
         const user = await db.user.create({
             data: {
-                ...data,
+                ...user_data,
+                avatar: avatarURL,
                 password: hashedPassword
             }
         })
