@@ -14,6 +14,7 @@ export const RegisterBody = t.Object({
         minLength: 1,
         error: "Display name is required",
     }),
+    avatar: t.Optional(t.File()),
 })
 
 export type RegisterInput = Static<typeof RegisterBody>
