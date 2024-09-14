@@ -2,6 +2,7 @@ import { Elysia } from "elysia";
 import cors from "@elysiajs/cors";
 
 import { authController } from "./controllers/auth.controller";
+import { userController } from "./controllers/user.controller";
 import { BadRequestError } from "./utils/error";
 import jwt from "@elysiajs/jwt";
 
@@ -42,6 +43,7 @@ const app = new Elysia()
   })
   .get("/", () => "Welcome to User Management Microservice")
   .use(authController)
+  .use(userController)
   .listen(PORT);
 
 console.log(
