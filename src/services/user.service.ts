@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 import { db } from '../utils/db';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { uploadImage } from '../utils/firebase';
 import { UserUpdateInput } from '../dto/user.dto';
 

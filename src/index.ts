@@ -3,7 +3,7 @@ import cors from "@elysiajs/cors";
 
 import { authController } from "./controllers/auth.controller";
 import { userController } from "./controllers/user.controller";
-import { BadRequestError } from "./utils/error";
+import { BadRequestError, UnauthorizedError } from "./utils/error";
 import jwt from "@elysiajs/jwt";
 
 const PORT = 3000;
@@ -11,9 +11,16 @@ const PORT = 3000;
 const app = new Elysia()
   .use(cors())
   .error({
-    "BAD_REQUEST": BadRequestError
+    "BAD_REQUEST": BadRequestError,
+    "UNAUTHORIZED": UnauthorizedError,
   })
   .onError(({ code, error, set }) => {
+    if (code === "UNAUTHORIZED") {
+      set.status = 401;
+      return {
+        error: "Unauthorized 🦊",
+      };
+    }
     if (code === "NOT_FOUND") {
       set.status = 404;
       return {

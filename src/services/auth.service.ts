@@ -1,5 +1,5 @@
 import { LoginInput, RegisterInput } from "../dto/auth.dto";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { db } from "../utils/db";
 import { ValidationError } from "elysia";
 import { BadRequestError } from "../utils/error";
