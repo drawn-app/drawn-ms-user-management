@@ -4,6 +4,7 @@ export function jwtParams(user: User) {
     return {
         id: user.id,
         email: user.email,
-        role: user.role
+        role: user.role,
+        iss: process.env.JWT_KEY!
     }
 }

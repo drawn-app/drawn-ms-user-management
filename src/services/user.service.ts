@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 import { db } from '../utils/db';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { uploadImage } from '../utils/firebase';
 import { UserUpdateInput } from '../dto/user.dto';
 
@@ -18,6 +18,18 @@ export default class UserService{
         const user = await db.user.findUnique({
             where: {
                 id: id
+            }
+        });
+        if (!user) {
+            throw new Error("User not found");
+        }
+        return this.removePassword(user);
+    }
+
+    async getUserByEmail(email: string) {
+        const user = await db.user.findUnique({
+            where: {
+                email: email
             }
         });
         if (!user) {

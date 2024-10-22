@@ -1,17 +1,20 @@
 import Elysia from "elysia";
 import { LoginBody, RegisterBody } from "../dto/auth.dto";
 import AuthService from "../services/auth.service";
-import { BadRequestError } from "../utils/error";
+import { BadRequestError, UnauthorizedError } from "../utils/error";
 import jwt from "@elysiajs/jwt";
 import { jwtParams } from "../utils/jwtParams";
+import UserService from "../services/user.service";
 
 const authService = new AuthService();
+const userService = new UserService();
 
 export const authController = new Elysia({ prefix: '/auth' })
     .use(
         jwt({
             name: 'jwt',
-            secret: process.env.JWT_SECRET!
+            secret: process.env.JWT_SECRET!,
+            exp: '7d',
         })
     )
 
@@ -64,4 +67,12 @@ export const authController = new Elysia({ prefix: '/auth' })
         return {
             message: "Logged out"
         }
+    })
+
+    // POST /auth/token
+    .post("/token", async ({ headers }) => {
+        if (!headers['x-id']) return new UnauthorizedError()
+        
+        const user = await userService.getUserById(headers['x-id'])
+        return user
     })

@@ -9,14 +9,17 @@
     "@elysiajs/cors": "^1.1.1",
     "@elysiajs/jwt": "^1.1.1",
     "@prisma/client": "5.19.1",
-    "bcrypt": "^5.1.1",
+    "amqplib": "^0.10.4",
+    "bcryptjs": "^2.4.3",
     "elysia": "latest",
-    "firebase": "^10.13.1",
-    "prisma": "^5.19.1"
+    "firebase": "^10.13.1"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.5",
     "@types/bcrypt": "^5.0.2",
-    "bun-types": "latest"
+    "@types/bcryptjs": "^2.4.6",
+    "bun-types": "latest",
+    "prisma": "^5.20.0"
   },
   "module": "src/index.js"
 }
