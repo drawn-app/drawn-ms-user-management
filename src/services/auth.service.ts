@@ -4,6 +4,8 @@ import { db } from "../utils/db";
 import { ValidationError } from "elysia";
 import { BadRequestError } from "../utils/error";
 import { uploadImage } from "../utils/firebase";
+import amqp, { Connection, Channel } from "amqplib/callback_api";
+import { MailMessage } from "../utils/type";
 
 export default class AuthService {
 
@@ -33,6 +35,45 @@ export default class AuthService {
                 password: hashedPassword
             }
         })
+
+        const mailMessage: MailMessage = {
+            to: user.email,
+            subject: "Welcome to Drawn!",
+            body: "Welcome to Drawn, the best collaborative app in the world. HOHOHOHOHOHOHOHOHO",
+        }
+
+        amqp.connect(
+            "amqp://localhost",
+            function (error0: Error | null, connection: Connection) {
+                if (error0) {
+                  throw error0;
+                }
+            
+                connection.createChannel(function (error1: Error | null, channel: Channel) {
+                  if (error1) {
+                    throw error1;
+                  }
+            
+                  const exchange = "mail_order";
+                  const routingKey = "email.register";
+            
+                  channel.assertExchange(exchange, "topic", {
+                    durable: true,
+                  });
+            
+                  channel.publish(
+                    exchange,
+                    routingKey,
+                    Buffer.from(JSON.stringify(mailMessage))
+                  );
+                  console.log(
+                    " [x] Sent '%s' with routing key: '%s'",
+                    JSON.stringify(mailMessage),
+                    routingKey
+                  );
+                });
+            }
+        )
 
         return user;
     }

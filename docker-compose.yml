@@ -1,5 +1,8 @@
 version: '3.8'
 
+volumes:
+  user-service-db-data: {}
+
 services:
   user-service:
     build:
@@ -12,6 +15,17 @@ services:
       - 3000:3000
     env_file:
       - .env
+  user-service-db:
+    image: postgres:16.2
+    container_name: user-service-db
+    environment:
+      POSTGRES_DB: user-service
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - user-service-db-data:/var/lib/postgresql/data
 
 
       
