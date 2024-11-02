@@ -1,4 +1,4 @@
-FROM oven/bun AS build
+FROM oven/bun:1-alpine AS build
 
 WORKDIR /app
 
@@ -23,13 +23,27 @@ RUN bun build \
     --outfile server \
     ./src/index.ts
 
-FROM debian:bullseye AS prod
+FROM node:23-bullseye AS prod
 
 WORKDIR /app
 
 COPY --from=build /app/server /app/server
 COPY --from=build /app/node_modules/.prisma/client /app/node_modules/.prisma/client
+COPY --from=build /app/prisma/schema.prisma /app/prisma/schema.prisma
+
+RUN npm install prisma --save-dev
 
 CMD ["/app/server"]
 
 EXPOSE 3000
+
+# FROM debian:bullseye AS prod
+
+# WORKDIR /app
+
+# COPY --from=build /app/server /app/server
+# COPY --from=build /app/node_modules/.prisma/client /app/node_modules/.prisma/client
+
+# CMD ["/app/server"]
+
+# EXPOSE 3000
