@@ -39,11 +39,11 @@ export default class AuthService {
         const mailMessage: MailMessage = {
             to: user.email,
             subject: "Welcome to Drawn!",
-            body: "Welcome to Drawn, the best collaborative app in the world. HOHOHOHOHOHOHOHOHO",
+            body: "Welcome to Drawn, the drawing collaborative app. We are excited to have you on board!",
         }
 
         amqp.connect(
-            "amqp://localhost",
+            process.env.RABBITMQ_URL || "amqp://localhost",
             function (error0: Error | null, connection: Connection) {
                 if (error0) {
                   throw error0;
